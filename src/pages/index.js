@@ -221,10 +221,10 @@ const IndexPage = ({data, pageContext}) => {
 
   const renderLinks = (item) => (
     <div>
-      <span className={classes.projectLabel}>Links:</span>
-      {item.urlproduction && <a href="#">{item.urlproduction}</a>}
-      {item.urlstaging && <a href="#">{item.urlstaging}</a>}
-      {item.urlcasestudy && <a href="#">{item.urlcasestudy}</a>}
+      <span className={classes.projectLabel}>Links:</span>&nbsp;
+      {item.urlproduction && <a href={item.urlproduction}>{item.urlnameproduction}</a>}&nbsp;
+      {item.urlstaging && <a href={item.urlstaging}>{item.urlnamestaging}</a>}&nbsp;
+      {item.urlcasestudy && <a href={item.urlcasestudy}>{item.urlnamecasestudy}</a>}&nbsp;
     </div>
   );
 
