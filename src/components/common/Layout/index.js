@@ -39,7 +39,7 @@ const Index = (props) => {
 
   return (
     <div className={classes.root}>
-      <Topbar/>
+      {/* <Topbar/> */}
       <main className={classes.content}>
         <div className={classes.container}>
           {children}

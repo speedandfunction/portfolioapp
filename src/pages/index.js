@@ -27,36 +27,6 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
 
-const columns = [
-  {id: 'title', label: 'Title', minWidth: 100},
-  {id: 'description', label: 'Description', minWidth: 100},
-  {
-    id: 'isPrivate',
-    label: 'Private',
-    checkbox: true,
-  },
-  {
-    id: 'timeSpent',
-    label: 'Time\u00a0Spent\u00a0(h)',
-  },
-  {
-    id: 'isActive',
-    label: 'Is\u00a0Active',
-    checkbox: true,
-  },
-  {
-    id: 'techStacks',
-    label: 'Tech\u00a0Stacks',
-    isChips: true,
-  },
-  {
-    id: 'localImage',
-    label: 'Image',
-    minWidth: 256,
-    isImage: true,
-  },
-];
-
 const useStyles = makeStyles((theme) => ({
   chipContainer: {
     display: 'relative',
@@ -78,7 +48,10 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
   },
   projectWrapper: {
-    padding: '273px 130px 173px',
+    padding: '0 130px 173px',
+    '@media screen and (max-width: 768px)': {
+      padding: '0 20px 100px',
+    },
   },
   projecItem: {
     display: 'flex',
@@ -86,21 +59,37 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     '&:nth-child(2n)': {
       flexDirection: 'row-reverse',
+      '@media screen and (max-width: 768px)': {
+        flexDirection: 'column-reverse',
+      },
     },
     '& img': {
       maxWidth: '100%',
     },
     '& + &': {
       marginTop: '287px',
+      '@media screen and (max-width: 768px)': {
+        marginTop: '75px',
+      },
+    },
+    '@media screen and (max-width: 768px)': {
+      flexDirection: 'column-reverse',
     },
   },
   projectLeft: {
     textAlign: 'left',
     width: '48%',
+    '@media screen and (max-width: 768px)': {
+      width: '100%',
+    },
   },
   projectRight: {
     width: '48%',
     textAlign: 'center',
+    '@media screen and (max-width: 768px)': {
+      width: '100%',
+      marginBottom: '40px',
+    },
   },
   projectTitle: {
     fontSize: '36px',
@@ -161,6 +150,15 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: '#1a1a1a',
   },
+  pageTitle: {
+    fontSize: '100px',
+    textAlign: 'center',
+    margin: '200px 0 100px',
+    '@media screen and (max-width: 768px)': {
+      fontSize: '40px',
+      margin: '100px 0 50px',
+    },
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -203,7 +201,6 @@ const IndexPage = ({data, pageContext}) => {
     navigate(`/${navigatePage}`);
   };
 
-  const handleChipClick = () => {};
   const renderSection = (item, field) => (
     <div>
       <div className={classes.projectLabel}>{field}</div>
@@ -221,16 +218,23 @@ const IndexPage = ({data, pageContext}) => {
 
   const renderLinks = (item) => (
     <div>
-      <span className={classes.projectLabel}>Links:</span>&nbsp;
-      {item.urlproduction && <a href={item.urlproduction}>{item.urlnameproduction}</a>}&nbsp;
-      {item.urlstaging && <a href={item.urlstaging}>{item.urlnamestaging}</a>}&nbsp;
-      {item.urlcasestudy && <a href={item.urlcasestudy}>{item.urlnamecasestudy}</a>}&nbsp;
+      <span className={classes.projectLabel}>Links:</span>
+      &nbsp;
+      {item.urlproduction && <a href={item.urlproduction}>{item.urlnameproduction}</a>}
+      &nbsp;
+      {item.urlstaging && <a href={item.urlstaging}>{item.urlnamestaging}</a>}
+      &nbsp;
+      {item.urlcasestudy && <a href={item.urlcasestudy}>{item.urlnamecasestudy}</a>}
+      &nbsp;
     </div>
   );
 
   const renderItem = (item) => {
     console.log(item);
     const hasLinks = item.urlproduction || item.urlstaging || item.urlcasestudy;
+    const fluid = get(item.localImage, 'childImageSharp.fluid', false);
+
+    console.log(fluid, item.image, item.localImage);
 
     return (
       <div className={classes.projecItem}>
@@ -246,25 +250,64 @@ const IndexPage = ({data, pageContext}) => {
           {item.techstacktags && renderTags(item)}
         </div>
         <div className={classes.projectRight}>
-          <img alt={item.title} src={item.image} />
+          {
+            fluid && (
+              <div
+                onClick={() => handleClickDialogOpen(item)}
+                onKeyDown={() => handleClickDialogOpen(item)}
+                tabIndex="0"
+                role="switch"
+                aria-checked={openDialog.open}
+              >
+                <Img fluid={fluid} alt={item.title} />
+              </div>
+            )
+          }
         </div>
       </div>
-      // projectTitle
-      // projectSubtitle
-      // projectParagraph
-      // projectLink
-      // projectLabel
-      // projectTags
-      // projectTag
     );
   };
 
   const renderTable = () => (
-    <Paper>
+    <>
       <div className={classes.projectWrapper}>
         {rows.map(({node}) => renderItem(node))}
+        {rows && (
+          <TablePagination
+            rowsPerPageOptions={[]}
+            component="div"
+            count={totalCount}
+            rowsPerPage={10}
+            page={currentPage - 1}
+            onChangePage={handleChangePage}
+          />
+        )}
       </div>
-    </Paper>
+      <Dialog
+        className={classes.dialog}
+        fullScreen
+        open={openDialog.open}
+        onClose={handleDialogClose}
+        TransitionComponent={Transition}
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              {openDialog.title}
+            </Typography>
+            <IconButton edge="start" color="inherit" onClick={handleDialogClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <DialogContent dividers>
+          <Img fluid={openDialog.image} />
+        </DialogContent>
+        <DialogActions>
+          <p>{openDialog.description}</p>
+        </DialogActions>
+      </Dialog>
+    </>
   );
   //     <Table stickyHeader aria-label="sticky table">
   //       <TableHead>
@@ -354,30 +397,6 @@ const IndexPage = ({data, pageContext}) => {
   //         onChangePage={handleChangePage}
   //       />
   //     )}
-  //     <Dialog
-  //       className={classes.dialog}
-  //       fullScreen
-  //       open={openDialog.open}
-  //       onClose={handleDialogClose}
-  //       TransitionComponent={Transition}
-  //     >
-  //       <AppBar className={classes.appBar}>
-  //         <Toolbar>
-  //           <Typography variant="h6" className={classes.title}>
-  //             {openDialog.title}
-  //           </Typography>
-  //           <IconButton edge="start" color="inherit" onClick={handleDialogClose} aria-label="close">
-  //             <CloseIcon />
-  //           </IconButton>
-  //         </Toolbar>
-  //       </AppBar>
-  //       <DialogContent dividers>
-  //         <Img fluid={openDialog.image} />
-  //       </DialogContent>
-  //       <DialogActions>
-  //         <p>{openDialog.description}</p>
-  //       </DialogActions>
-  //     </Dialog>
   //   </Paper>
   // );
 
@@ -387,7 +406,7 @@ const IndexPage = ({data, pageContext}) => {
   return (
     <>
       <Seo title="Demo Home" />
-      <h1>Demo Title</h1>
+      <h1 className={classes.pageTitle}>Work</h1>
       {!data
         ? <p>Loading</p>
         : renderTable()}
@@ -418,6 +437,13 @@ export const query = graphql`
           urlnameproduction
           urlnamestaging
           urlnamecasestudy
+          localImage {
+            childImageSharp {
+              fluid(maxWidth: 1280) {
+                ...GatsbyImageSharpFluid
+              }
+            }
+          }
         }
       }
       totalCount

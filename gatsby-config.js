@@ -65,8 +65,8 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-remote-images',
       options: {
-        nodeType: 'googleSheetDemoRow',
-        imagePath: 'img',
+        nodeType: 'googleSheetContentFromNickRow',
+        imagePath: 'image',
         name: 'localImage',
       },
     },
