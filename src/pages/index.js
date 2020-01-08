@@ -251,17 +251,19 @@ const IndexPage = ({data, pageContext}) => {
         </div>
         <div className={classes.projectRight}>
           {
-            fluid && (
-              <div
-                onClick={() => handleClickDialogOpen(item)}
-                onKeyDown={() => handleClickDialogOpen(item)}
-                tabIndex="0"
-                role="switch"
-                aria-checked={openDialog.open}
-              >
-                <Img fluid={fluid} alt={item.title} />
-              </div>
-            )
+            fluid ?
+              (
+                <div
+                  onClick={() => handleClickDialogOpen(item)}
+                  onKeyDown={() => handleClickDialogOpen(item)}
+                  tabIndex="0"
+                  role="switch"
+                  aria-checked={openDialog.open}
+                >
+                  <Img fluid={fluid} alt={item.title} objectFit="cover" objectPosition="50% 50%" />
+                </div>
+              )
+              : <img src={item.image} alt={item.title} />
           }
         </div>
       </div>
@@ -272,7 +274,7 @@ const IndexPage = ({data, pageContext}) => {
     <>
       <div className={classes.projectWrapper}>
         {rows.map(({node}) => renderItem(node))}
-        {rows && (
+        {/* {rows && (
           <TablePagination
             rowsPerPageOptions={[]}
             component="div"
@@ -281,7 +283,7 @@ const IndexPage = ({data, pageContext}) => {
             page={currentPage - 1}
             onChangePage={handleChangePage}
           />
-        )}
+        )} */}
       </div>
       <Dialog
         className={classes.dialog}
@@ -415,7 +417,7 @@ const IndexPage = ({data, pageContext}) => {
 };
 
 export const query = graphql`
-  query allGoogleSheetContentFromNickRow($skip: Int! = 0, $limit: Int! = 10) {
+  query allGoogleSheetContentFromNickRow($skip: Int! = 0, $limit: Int! = 999) {
     allGoogleSheetContentFromNickRow(
       limit: $limit
       skip: $skip

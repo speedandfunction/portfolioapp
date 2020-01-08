@@ -20,7 +20,7 @@ exports.createPages = async ({graphql, actions, reporter}) => {
   }
 
   const rows = result.data.allGoogleSheetContentFromNickRow.totalCount;
-  const rowsPerPage = 10;
+  const rowsPerPage = 999;
   const numPages = Math.ceil(rows / rowsPerPage);
 
   Array.from({length: numPages}).forEach((_, i) => {
