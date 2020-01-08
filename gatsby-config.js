@@ -28,8 +28,7 @@ module.exports = {
       options: {
         spreadsheetId: '1zRJ6GXTuITju7J5xflPHj9rxpDsPWReOBJk7pYTMm9I',
         worksheetTitle: 'Content from Nick',
-        credentials: require('./credentials.json'),
-        // credentials: JSON.parse(process.env.GATSBY_CREDENTIALS),
+        credentials: JSON.parse(process.env.GATSBY_CREDENTIALS),
       },
     },
     {
