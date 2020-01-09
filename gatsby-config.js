@@ -1,10 +1,11 @@
 /* eslint-disable global-require */
 module.exports = {
+  pathPrefix: `/portfolio`,
   siteMetadata: {
-    title: 'Site title',
+    title: 'Portfolio app',
     description: '',
     author: '@gatsbyjs',
-    siteUrl: 'https://sf-portfolio-table-demo.netlify.com',
+    siteUrl: 'https://speedandfunction.com/portfolio',
   },
   plugins: [
     'gatsby-plugin-favicon',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {graphql, navigate} from 'gatsby';
 import Img from 'gatsby-image';
 import get from 'lodash/get';
@@ -28,6 +28,20 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
+  progress: {
+    '-webkit-appearance': 'none',
+    'appearance': 'none',
+
+    'width': '300px',
+    'height': '5px',
+
+    '&[value]::-webkit-progress-bar': {
+      'background-color': '#d7d7d7',
+    },
+    '&[value]::-webkit-progress-value': {
+      'background-color': '#5ec7ec',
+    },
+  },
   chipContainer: {
     display: 'relative',
   },
@@ -159,6 +173,22 @@ const useStyles = makeStyles((theme) => ({
       margin: '100px 0 50px',
     },
   },
+  showingInfo: {
+    display: 'flex',
+    'flex-direction': 'column',
+    margin: '0 auto 100px',
+    width: '300px',
+    'text-align': 'center',
+  },
+  viewAll: {
+    padding: '10px 30px',
+    'background-color': '#5fbeec',
+    'color': '#fff',
+    'font-size': '22px',
+    'margin-top': '30px',
+    'border-radius': '27px',
+    cursor: 'pointer',
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -179,6 +209,7 @@ const IndexPage = ({data, pageContext}) => {
   const [openDialog, setOpenDialog] = React.useState({
     open: false,
   });
+  const [isViewAll, setViewAll] = useState(false);
 
   console.log(rows);
 
@@ -270,10 +301,14 @@ const IndexPage = ({data, pageContext}) => {
     );
   };
 
+  const toggleViewAll = () => {
+    setViewAll(true);
+  }
+
   const renderTable = () => (
     <>
       <div className={classes.projectWrapper}>
-        {rows.map(({node}) => renderItem(node))}
+        {isViewAll ? rows.map(({node}) => renderItem(node)) : rows.slice(0, 10).map(({node}) => renderItem(node))}
         {/* {rows && (
           <TablePagination
             rowsPerPageOptions={[]}
@@ -285,6 +320,15 @@ const IndexPage = ({data, pageContext}) => {
           />
         )} */}
       </div>
+      {
+        !isViewAll && <div className={classes.showingInfo}>
+          <div className={classes.projectParagraph}>Showing 10 of {rows.length} projects</div>
+          <progress className={classes.progress} max="100" value={10/rows.length*100}></progress>
+          <div>
+            <button onClick={() => {toggleViewAll();}} className={classes.viewAll}>View All</button>
+          </div>
+        </div>
+      }
       <Dialog
         className={classes.dialog}
         fullScreen
