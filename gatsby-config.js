@@ -1,6 +1,5 @@
 /* eslint-disable global-require */
 module.exports = {
-  pathPrefix: `/portfolio`,
   siteMetadata: {
     title: 'Portfolio app',
     description: '',
@@ -48,6 +47,10 @@ module.exports = {
               {
                 family: 'Roboto Condensed',
                 variants: ['700'],
+              },
+              {
+                family: 'Open Sans Condensed',
+                variants: ['300'],
               },
             ],
           },
