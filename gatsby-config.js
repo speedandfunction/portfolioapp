@@ -1,5 +1,6 @@
 /* eslint-disable global-require */
 module.exports = {
+  pathPrefix: '/portfolio',
   siteMetadata: {
     title: 'Portfolio app',
     description: '',
